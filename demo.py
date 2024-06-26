@@ -1,29 +1,4 @@
-class Task:
-    def __init__(self, name, duration, deadline=None, resources=1):
-        self.name = name
-        self.duration = duration
-        self.deadline = deadline
-        self.resources = resources
-
-    def __repr__(self):
-        return f"Task(name={self.name}, duration={self.duration}, deadline={self.deadline}, resources={self.resources})"
-
-class Method:
-    def __init__(self, name, sub_tasks):
-        self.name = name
-        self.sub_tasks = sub_tasks
-
-    def __repr__(self):
-        return f"Method(name={self.name}, sub_tasks={self.sub_tasks})"
-
-class Plan:
-    def __init__(self, tasks):
-        self.tasks = tasks
-        self.total_duration = sum(task.duration for task in tasks)
-        self.total_resources = sum(task.resources for task in tasks)
-
-    def __repr__(self):
-        return f"Plan(total_duration={self.total_duration}, total_resources={self.total_resources}, tasks={self.tasks})"
+from htn_utils import Task, Method, Plan
 
 class HTNPlanner:
     def __init__(self):
@@ -82,24 +57,27 @@ class HTNPlanner:
         return plans
 
     def generate_plans(self, current_plan, plans):
+        ## Base check if there are no more tasks left to process
         if not self.tasks:
             plans.append(Plan(current_plan.copy()))
             return
+        ## Process current task and deecompose the method to get list of possible methods to achieve this task
         current_task = self.tasks.pop(0)
         methods = self.decompose(current_task)
+        ## Handle Tasks with no methods
         if not methods:
-            current_plan.append(current_task)
-            self.generate_plans(current_plan, plans)
-            current_plan.pop()
+            current_plan.append(current_task)  ## add current task to plan
+            self.generate_plans(current_plan, plans)  ## call self method to process next task
+            current_plan.pop()  ## task is removed from 'current_plan' to allow for exploring other branches
         else:
             for method in methods:
-                self.tasks = method.sub_tasks + self.tasks
-                self.generate_plans(current_plan, plans)
-                self.tasks = self.tasks[len(method.sub_tasks):]
+                self.tasks = method.sub_tasks + self.tasks  ## subtasks are added to front of list of self.tasks
+                self.generate_plans(current_plan, plans)  ## recursive call with new set of self.tasks
+                self.tasks = self.tasks[len(method.sub_tasks):]  ## remove subtasks added from 2 lines above to restore original state
         self.tasks.insert(0, current_task)
 
     def select_best_plan(self, plans):
-        # Criteria: Minimize total duration and total resource usage
+        ## Minimize total duration and total resource usage
         best_plan = min(plans, key=lambda plan: (plan.total_duration, plan.total_resources))
         return best_plan
 
