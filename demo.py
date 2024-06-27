@@ -16,15 +16,15 @@ class HTNPlanner:
         return feasible_methods
 
     def get_methods_for_task(self, task):
-        if task.name == "Complete Mission":
+        if task.name == "Search and Rescue":
             return [Method("Mission Method 1", [Task("Search for Survivors", 4, resources=2),
                                                 Task("Deliver Supplies", 2),
                                                 Task("Report Back", 1),
-                                                Task("Secure Area", 1)]),
-                    Method("Mission Method 2", [Task("Search for Survivors Quickly", 3, resources=3),
+                                                Task("Secure Area", 2)]),
+                    Method("Mission Method 2", [Task("Search for Survivors Quickly", 1, resources=3),
                                                 Task("Deliver Supplies", 2),
                                                 Task("Report Back", 1),
-                                                Task("Secure Area Quickly", 2, resources=2)])]
+                                                Task("Secure Area Quickly", 1, resources=2)])]
         elif task.name == "Search for Survivors":
             return [Method("Search Method", [Task("Search Area A", 2),
                                              Task("Search Area B", 2)])]
@@ -40,7 +40,7 @@ class HTNPlanner:
         elif task.name == "Secure Area":
             return [Method("Secure Method", [Task("Patrol Area", 1)])]
         elif task.name == "Secure Area Quickly":
-            return [Method("Quick Secure Method", [Task("Quick Patrol Area", 2, resources=2)])]
+            return [Method("Quick Secure Method", [Task("Quick Patrol Area", 1, resources=2)])]
         return []
 
     def is_feasible(self, method, parent_task):
@@ -60,6 +60,7 @@ class HTNPlanner:
         ## Base check if there are no more tasks left to process
         if not self.tasks:
             plans.append(Plan(current_plan.copy()))
+            self.total_duration = sum(task.duration for task in self.tasks)
             return
         ## Process current task and deecompose the method to get list of possible methods to achieve this task
         current_task = self.tasks.pop(0)
@@ -82,7 +83,7 @@ class HTNPlanner:
         return best_plan
 
 # Define the root tasks with overall time limits and resource constraints
-root_tasks = [Task("Complete Mission", 8)]
+root_tasks = [Task("Search and Rescue", 10)]
 
 # Create the HTN planner
 planner = HTNPlanner()
@@ -99,3 +100,6 @@ for plan in plans:
 best_plan = planner.select_best_plan(plans)
 print("\nBest Plan:")
 print(best_plan)
+
+print("\nReadable Plan:")
+print([task.name for task in best_plan.tasks])
