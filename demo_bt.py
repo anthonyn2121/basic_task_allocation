@@ -100,22 +100,20 @@ class Agent:
             self.current_task = None
 
 class Task:
-    def __init__(self, name, duration, location, resources=1):
+    def __init__(self, name, location):
         self.name = name
-        self.duration = duration
         self.location = np.array(location)
-        self.resources = resources
         self.completed = False
 
 # Initialize an agent and tasks
 agent = Agent("Agent 1", [0, 0])
 tasks = [
-    Task("Search for Survivors Quickly", 3, [5, 5], resources=3),
-    Task("Navigate to Location", 1, [8, 3]),
-    Task("Drop Supplies", 1, [8, 3]),
-    Task("Compile Report", 0.5, [2, 7]),
-    Task("Transmit Data", 0.5, [2, 7]),
-    Task("Quick Patrol Area", 2, [6, 2], resources=2)
+    Task("Search for Survivors Quickly", [5, 5]),
+    Task("Navigate to Location", [8, 3]),
+    Task("Drop Supplies", [8, 3]),
+    Task("Compile Report", [2, 7]),
+    Task("Transmit Data", [2, 7]),
+    Task("Quick Patrol Area", [6, 2])
 ]
 
 # Assign tasks to the agent
