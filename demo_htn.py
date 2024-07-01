@@ -62,7 +62,7 @@ class HTNPlanner:
             plans.append(Plan(current_plan.copy()))
             self.total_duration = sum(task.duration for task in self.tasks)
             return
-        ## Process current task and deecompose the method to get list of possible methods to achieve this task
+        ## Process current task and decompose the method to get list of possible methods to achieve this task
         current_task = self.tasks.pop(0)
         methods = self.decompose(current_task)
         ## Handle Tasks with no methods
