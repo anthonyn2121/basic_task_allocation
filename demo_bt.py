@@ -94,6 +94,7 @@ class Agent:
     def move_to_next_task(self):
         if self.tasks:
             self.current_task = self.tasks.pop(0)
+            # navigate_to_location(self)
             self.set_goal(self.current_task.location)
             self.path.append(self.current_task.location)
         else:
@@ -122,6 +123,6 @@ agent.move_to_next_task()
 
 # Run the simulation
 while agent.current_task:
-    navigate_to_location(agent)
     agent.execute_task()
     agent.move_to_next_task()
+    navigate_to_location(agent)
