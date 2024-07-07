@@ -124,5 +124,4 @@ agent.move_to_next_task()
 # Run the simulation
 while agent.current_task:
     agent.execute_task()
-    agent.move_to_next_task()
     navigate_to_location(agent)
